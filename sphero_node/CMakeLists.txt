@@ -6,6 +6,15 @@ find_package(catkin REQUIRED message_generation dynamic_reconfigure std_msgs)
 add_message_files(FILES
                   SpheroCollision.msg
                  )
+             
+add_service_files(
+	DIRECTORY 
+		srv
+	FILES 
+		StabilizationSrv.srv
+		SetFloatSrv.srv
+		SetIntSrv.srv
+)
 
 generate_messages(DEPENDENCIES std_msgs)
 generate_dynamic_reconfigure_options(cfg/Reconfig.cfg)

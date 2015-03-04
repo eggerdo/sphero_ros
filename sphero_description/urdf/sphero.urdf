@@ -9,21 +9,32 @@
   <property name="M_PI" value="3.14159"/>
   <property name="SCALE" value="0.0254"/>
 
+  <material name="Green">
+    <color rgba="0.0 0.8 0.0 1.0"/>
+  </material>
 
-
-
-<link name="base_link">
-    <inertial>
-      <mass value="0.5" />
-      <origin xyz="0 0 0.0" />
-      <inertia ixx="0.0" ixy="0.0" ixz="0.0"
-         iyy="0.0" iyz="0.0" izz="0.0" />
-    </inertial>
-
+  <link name="base_footprint">
     <visual>
-      <origin xyz=" 0 0 0" rpy="3.14 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-	<mesh filename="package://sphero_description/meshes/Sphero_Textured.dae" scale=" 0.0127 0.0127 0.0127"/>
+        <box size="0.001 0.001 0.001" />
+      </geometry>
+      <material name="Green" />
+    </visual>
+  
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <geometry>
+	    <box size="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+   
+  <link name="base_link">
+    <visual>
+      <origin xyz=" 0 0 0" rpy="0 0 0" />
+      <geometry>
+	    <mesh filename="package://sphero_description/meshes/Sphero_Textured.dae"/>
       </geometry>
     </visual>
 
@@ -34,21 +45,11 @@
       </geometry>
     </collision>
   </link>
-
-
- 
-
-  <!--joint name="base_footprint_joint" type="fixed">
-    <origin xyz="0 0 0.0381" rpy="0 0 0" />
-    <parent link="base_footprint"/>
-    <child link="base_link" />
+  
+  <joint name="base_footprint_joint" type="continuous">
+	<origin xyz="0 0 0.038" rpy="0 0 0" />        
+	<parent link="base_footprint"/>
+	<child link="base_link" />
   </joint>
-
-  <joint name="imu_joint" type="fixed">
-    <origin xyz="0 0 0.0" rpy="0 0 0" />
-    <parent link="base_link"/>
-    <child link="imu_link" />
-  </joint-->
-
-
+  
 </robot>
