@@ -1,0 +1,15 @@
+<launch>
+
+  <node pkg="sphero_teleop" type="sphero_teleop_joy" name="sphero_teleop_joystick" output="screen">
+    <param name="scale_linear" value="0.5"/>
+    <param name="axis_deadman" value="10"/>
+    <param name="x_axis" value="1"/>
+    <param name="y_axis" value="0"/>
+    <param name="y_inverted" value="true"/>
+    <param name="x_inverted" value="false"/>
+    <remap from="sphero_teleop_joystick/cmd_vel" to="cmd_vel"/>
+  </node>
+
+  <node pkg="joy" type="joy_node" name="joystick"/>
+
+</launch>

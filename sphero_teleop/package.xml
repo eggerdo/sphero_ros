@@ -1,0 +1,21 @@
+<package>
+  <name>sphero_teleop</name>
+  <version>0.1.2</version>
+  <description>
+     Provides teleoperation using joystick. Adapted from on turtlebot_teleop
+  </description>
+  <author>Dominik Egger</author>
+  <maintainer email="dominik@almende.org">Dominik Egger</maintainer>
+  <license>BSD</license>
+  <url>http://ros.org/wiki/sphero_teleop</url>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+
+  <run_depend>joy</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>roscpp</run_depend>
+
+</package>
