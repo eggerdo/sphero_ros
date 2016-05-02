@@ -46,46 +46,49 @@ private:
 
   ros::NodeHandle ph_, nh_;
 
-  int x_axis_, y_axis_, deadman_axis_;
+  int x_axis_, y_axis_, deadman_axis_, heading_axis_;
   bool x_inverted_, y_inverted_;
 
   double l_scale_, a_scale_;
-  ros::Publisher vel_pub_;
+  ros::Publisher vel_pub_, heading_pub_;
   ros::Subscriber joy_sub_;
 
   geometry_msgs::Twist last_published_;
   boost::mutex publish_mutex_;
-  bool deadman_pressed_;
+  bool deadman_pressed_, heading_pressed_;
   ros::Timer timer_;
 
 };
 
 SpheroTeleop::SpheroTeleop():
-  ph_("~"),
-  x_axis_(1),
-  y_axis_(0),
-  x_inverted_(false),
-  y_inverted_(false),
-  deadman_axis_(4),
-  l_scale_(0.3),
-  a_scale_(0.9)
+      ph_("~"),
+      x_axis_(1),
+      y_axis_(0),
+      x_inverted_(false),
+      y_inverted_(false),
+      deadman_axis_(4),
+      heading_axis_(5),
+      l_scale_(0.3),
+      a_scale_(0.9)
 {
   ph_.param("x_axis", x_axis_, x_axis_);
   ph_.param("x_inverted", x_inverted_, x_inverted_);
   ph_.param("y_axis", y_axis_, y_axis_);
   ph_.param("y_inverted", y_inverted_, y_inverted_);
   ph_.param("axis_deadman", deadman_axis_, deadman_axis_);
+  ph_.param("axis_heading", heading_axis_, heading_axis_);
   ph_.param("scale_angular", a_scale_, a_scale_);
   ph_.param("scale_linear", l_scale_, l_scale_);
 
   vel_pub_ = ph_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+  heading_pub_ = ph_.advertise<geometry_msgs::Twist>("heading", 1);
   joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 10, &SpheroTeleop::joyCallback, this);
 
   timer_ = nh_.createTimer(ros::Duration(0.1), boost::bind(&SpheroTeleop::publish, this));
 }
 
 void SpheroTeleop::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
-{ 
+{
   geometry_msgs::Twist vel;
   if (!y_inverted_) {
     vel.linear.y = l_scale_*joy->axes[y_axis_];
@@ -99,6 +102,7 @@ void SpheroTeleop::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
   }
   last_published_ = vel;
   deadman_pressed_ = joy->buttons[deadman_axis_];
+  heading_pressed_ = joy->buttons[heading_axis_];
 }
 
 void SpheroTeleop::publish()
@@ -108,6 +112,10 @@ void SpheroTeleop::publish()
   if (deadman_pressed_)
   {
     vel_pub_.publish(last_published_);
+  }
+  else if (heading_pressed_)
+  {
+    heading_pub_.publish(last_published_);
   }
 
 }

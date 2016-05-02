@@ -16,9 +16,7 @@
   </node>
 
   <node pkg="sphero_node" type="sphero.py" name="sphero_node" output="screen">
-<!--   	<param name="address" value="68:86:E7:02:C7:C3" /> -->
-  	<param name="address" value="68:86:E7:02:B4:30" />
-<!-- 	<param name="address" value="" /> -->
+    <!-- 	<param name="address" value="" /> -->
   </node>
-  
+
 </launch>

@@ -51,6 +51,7 @@ from sphero_node.srv import StabilizationSrv, StabilizationSrvResponse, SetFloat
 from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from sphero_node.cfg import ReconfigConfig
 from numpy import roll
+from roslib import msgs
 
 MAX_SPEED = 2 # m/s
 
@@ -110,6 +111,8 @@ class SpheroNode(object):
         self.angular_velocity_sub = rospy.Subscriber('set_angular_velocity', Float32, self.set_angular_velocity, queue_size = 1)
         self.reconfigure_srv = dynamic_reconfigure.server.Server(ReconfigConfig, self.reconfigure)
         self.transform_broadcaster = tf.TransformBroadcaster()
+
+        self.heading_sub = rospy.Subscriber("heading", Twist, self.update_heading, queue_size = 1)
 
         self.stabilization_srv = rospy.Service('~set_stabilization', StabilizationSrv, self.set_stabilization)
         self.heading_srv = rospy.Service('~set_heading', SetFloatSrv, self.set_heading)
@@ -299,6 +302,12 @@ class SpheroNode(object):
                 self.robot.roll(int(self.cmd_speed), int(self.cmd_heading), 1, False)
                 self.last_cmd_heading = self.cmd_heading
     
+
+    def update_heading(self, msg):
+        if self.is_connected:
+            self.cmd_heading = self.normalize_angle_positive(math.atan2(msg.linear.y, msg.linear.x))*180/math.pi
+            self.robot.roll(0, int(self.cmd_heading), 1, False)
+
     def set_color(self, msg):
         if self.is_connected:
             self.robot.set_rgb_led(int(msg.r*255),int(msg.g*255),int(msg.b*255),0,False)

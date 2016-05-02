@@ -569,6 +569,10 @@ class Sphero(threading.Thread):
 		#print data
 		self.send(data, response)
 
+	def disable_data_strm(self, response):
+		data = self.pack_cmd(REQ['CMD_SET_DATA_STRM'], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+		self.send(data, response)
+
 	def set_filtered_data_strm(self, sample_div, sample_frames, pcnt, response):
 		"""
 		Helper function to add all the filtered data to the data strm
@@ -841,7 +845,6 @@ class Sphero(threading.Thread):
 						data = data[(5+data_length):]
 					else:
 						break
-						#print "Response packet", self.data2hexstr(data_packet)
 				 
 				elif data[:2] == RECV['ASYNC']:
 					data_length = (ord(data[3])<<8)+ord(data[4])
